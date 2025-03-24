@@ -6,13 +6,14 @@ export const createClient = async () => {
   const cookieStore = await cookies();
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || "env-err",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "env-err",
     {
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll: (cookiesToSet) => {
           try {
+            // biome-ignore lint/complexity/noForEach: <explanation>
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
